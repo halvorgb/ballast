@@ -1,37 +1,14 @@
 module Ballast (BallastConfig(..), Cargo(..), run) where
 
-import           Control.Monad (unless)
-import qualified Data.Map      as M
-import qualified Data.Text     as T
-import qualified Data.Word     as W
+import           Ballast.Render
+import           Ballast.Types
+import           Control.Monad  (unless)
+import qualified Data.Text      as T
+import qualified Data.Word      as W
 import           Linear
 import           Linear.Affine
 import           SDL
 import           SDL.Time
-
-class Cargo a where
-  renderables :: a -> [Renderable]
-  eventFunction ::  a -> [Event] -> Maybe a
-  updateFunction :: a -> W.Word32 -> a
-
-
-data Renderable =
-  Renderable { rPosition             :: V2 Int
-             , rDimensions           :: V2 Int
-             , rTexture              :: Texture
-             , rRotation             :: Int -- degrees
-             , rSpritePosition       :: V2 Int
-             , rSpriteDimensions     :: V2 Int
-             , rSpriteSize           :: V2 Int
-             , rNofFrames            :: Int -- number of frames in the texture
-             , rMillisecondsPerFrame :: Int
-             }
-
-data BallastConfig =
-  BallastConfig { bcDimensions :: (Int, Int)
-                , bcTitle      :: T.Text
-                }
-
 
 -- 1000/60 = 16.666666 --> slightly faster than 60 fps
 millisecondsPerUpdate :: W.Word32
@@ -65,7 +42,6 @@ gameLoop renderer bc previousCargo previousTick previousLag = do
       -- update
       let (updatedCargo, remainingLag) = update previousCargo $ previousLag + elapsedTicks
 
-      print remainingLag
       -- render
       render renderer bc updatedCargo currentTick
 
@@ -86,27 +62,3 @@ update cargo lag = updateWhileLagging cargo lag
         in updateWhileLagging updatedCargo $ lag - millisecondsPerUpdate
       | otherwise =
         (cargo, lag)
-
-
-render :: Cargo c => Renderer -> BallastConfig -> c -> W.Word32 -> IO ()
-render renderer bc cargo currentTick = do
-  rendererDrawColor renderer $= V4 0 0 255 255
-  clear renderer
-  mapM_ (renderRenderable renderer currentTick) $ renderables cargo
-  present renderer
-
-renderRenderable :: Renderer -> W.Word32 -> Renderable -> IO ()
-renderRenderable renderer currentTick renderable =
-  copy renderer t (Just from) (Just to)
-  where
-    t = rTexture renderable
-    frame = (fromIntegral currentTick)
-            `div` (rMillisecondsPerFrame renderable)
-            `mod` (rNofFrames renderable)
-
-    (V2 spriteWidth _) = rSpriteDimensions renderable
-    spritePositionOffset = fmap fromIntegral
-                           $ V2 (spriteWidth * frame) 1
-                           * (rSpritePosition renderable)
-    from = Rectangle (P spritePositionOffset) $ fmap fromIntegral $ rDimensions renderable
-    to   = Rectangle (P $ fmap fromIntegral (rPosition renderable)) $ fmap fromIntegral $ rDimensions renderable

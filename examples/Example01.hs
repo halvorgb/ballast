@@ -10,7 +10,12 @@ import           SDL.Input
 import Control.Monad
 import           System.Random
 
-config = BallastConfig (640, 480) "Hello World"
+textures = [("", "")]
+
+config = BallastConfig { bcDimensions = (640, 480)
+                       , bcTitle = "Hello World"
+                       , bcTextures = textures
+                       }
 
 data Universe =
   Universe { something :: T.Text
