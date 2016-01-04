@@ -1,4 +1,4 @@
-module Ballast (BallastConfig(..), Cargo(..), run) where
+module Ballast (module Ballast.Types, run) where
 
 import           Ballast.Render
 import           Ballast.Types
@@ -25,7 +25,7 @@ run bc cargo = do
   gameLoop renderer bc cargo initialTick initialLag
   -- do we need to deinitialize?
 
--- | Gameloop: http://gameprogrammingpatterns.com/game-loop.html'
+-- | Gameloop: http://gameprogrammingpatterns.com/game-loop.html
 --  ticks = milliseconds since initialization, elapedTicks is the delay (delta) inbetween each iteration.
 gameLoop :: Cargo c => Renderer -> BallastConfig -> c -> W.Word32 -> W.Word32 -> IO ()
 gameLoop renderer bc previousCargo previousTick previousLag = do

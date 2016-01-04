@@ -2,12 +2,12 @@
 module Example01 where
 
 import           Ballast
+import           Control.Monad
 import qualified Data.Map      as M
 import qualified Data.Text     as T
 import qualified Data.Word     as W
 import           SDL.Event
 import           SDL.Input
-import Control.Monad
 import           System.Random
 
 textures = [("", "")]
