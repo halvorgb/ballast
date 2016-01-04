@@ -27,9 +27,9 @@ renderRenderable renderer currentTick renderable =
     (V2 spriteWidth spriteHeight) = rSpriteDimensions renderable
 
     frameNumber :: Int
-    frameNumber = (fromIntegral currentTick)
-                  `div` (rMillisecondsPerFrame renderable)
-                  `mod` (rNofSprites renderable)
+    frameNumber = fromIntegral currentTick
+                  `div` rMillisecondsPerFrame renderable
+                  `mod` rNofSprites renderable
 
     frame :: V2 Int
     frame = V2
@@ -39,7 +39,10 @@ renderRenderable renderer currentTick renderable =
 
     spritePositionOffset = fmap fromIntegral
                            $ rSpritePosition renderable
-                           + frame * (rSpriteDimensions renderable)
+                           + frame * rSpriteDimensions renderable
 
-    from = Rectangle (P spritePositionOffset) $ fmap fromIntegral $ rSpriteDimensions renderable
-    to   = Rectangle (P $ fmap fromIntegral (rPosition renderable)) $ fmap fromIntegral $ rDimensions renderable
+    from = Rectangle (P spritePositionOffset)
+           $ fromIntegral <$> rSpriteDimensions renderable
+
+    to   = Rectangle (P $ fromIntegral <$> rPosition renderable)
+           $ fromIntegral <$> rDimensions renderable

@@ -25,7 +25,7 @@ data Universe =
 instance Cargo Universe where
   renderables universe = []
 
-  eventFunction universe events = foldM handleEvent universe events
+  eventFunction = foldM handleEvent
     where
       handleEvent :: Universe -> Event -> Maybe Universe
       handleEvent universe (Event _ (KeyboardEvent keyboardEvent))
