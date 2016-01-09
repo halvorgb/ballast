@@ -9,7 +9,7 @@ import           SDL
 
 render :: Cargo c => Renderer -> BallastConfig -> c -> W.Word32 -> IO ()
 render renderer bc cargo currentTick = do
-  rendererDrawColor renderer $= V4 0 0 255 255
+  rendererDrawColor renderer $= bcClearColor bc
   clear renderer
   mapM_ (renderRenderable renderer currentTick) $ renderables cargo
   present renderer

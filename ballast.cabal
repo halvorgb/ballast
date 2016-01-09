@@ -51,6 +51,7 @@ executable ballast-example01
                , sdl2
                , text
                , random
+               , linear
 
   hs-source-dirs: examples
   main-is: Example01.hs

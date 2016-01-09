@@ -4,7 +4,7 @@ import           Ballast.GameLoop
 import           Ballast.Types
 import           SDL
 
-run :: Cargo c => BallastConfig -> c -> IO ()
+run :: (Show c, Cargo c) => BallastConfig -> c -> IO ()
 run bc cargo = do
   initializeAll
   window <- createWindow (bcTitle bc) defaultWindow

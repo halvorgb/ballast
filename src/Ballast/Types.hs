@@ -24,7 +24,9 @@ data Renderable =
              }
 
 data BallastConfig =
-  BallastConfig { bcDimensions :: (Int, Int)
-                , bcTitle      :: T.Text
-                , bcTextures   :: [(T.Text, FilePath)]
+  BallastConfig { bcDimensions  :: (Int, Int)
+                , bcTitle       :: T.Text
+                , bcTextures    :: [(T.Text, FilePath)]
+                , bcClearColor  :: V4 W.Word8
+                , bcMsPerUpdate :: W.Word32
                 }
