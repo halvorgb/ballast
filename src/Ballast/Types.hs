@@ -1,9 +1,12 @@
-module Ballast.Types(Cargo(..), Renderable(..), BallastConfig(..)) where
+module Ballast.Types(Cargo(..), Renderable(..), SpriteData(..), BallastConfig(..), TextureId, ) where
 
+import qualified Data.Map  as M
 import qualified Data.Text as T
 import qualified Data.Word as W
 import           Linear
 import           SDL
+
+type TextureId = T.Text
 
 class Cargo a where
   renderables :: a -> [Renderable]
@@ -14,19 +17,24 @@ class Cargo a where
 data Renderable =
   Renderable { rPosition             :: V2 Int -- position on the screen.
              , rDimensions           :: V2 Int
-             , rTexture              :: Texture
+             , rTextureId            :: TextureId
              , rRotation             :: Int -- degrees
-             , rSpritePosition       :: V2 Int -- position of the sprite, within texture
-             , rSpriteDimensions     :: V2 Int
-             , rNofSprites           :: Int
-             , rAnimations           :: V2 Int -- a rectangle of frames.
              , rMillisecondsPerFrame :: Int
+             , rSpriteData           :: SpriteData
+             }
+
+data SpriteData =
+  SpriteData { spSpritePosition   :: V2 Int -- position of the sprite, within texture
+             , spSpriteDimensions :: V2 Int
+             , spNofSprites       :: Int
+             , spSpriteRect       :: V2 Int-- a rectangle of frames.
              }
 
 data BallastConfig =
-  BallastConfig { bcDimensions  :: (Int, Int)
-                , bcTitle       :: T.Text
-                , bcTextures    :: [(T.Text, FilePath)]
-                , bcClearColor  :: V4 W.Word8
-                , bcMsPerUpdate :: W.Word32
+  BallastConfig { bcDimensions     :: (Int, Int)
+                , bcTitle          :: T.Text
+                , bcTextureAssets  :: [(TextureId, FilePath)]
+                , bcClearColor     :: V4 W.Word8
+                , bcMsPerUpdate    :: W.Word32
+                , bcLoadedTextures :: M.Map TextureId Texture
                 }

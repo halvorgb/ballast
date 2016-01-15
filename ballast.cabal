@@ -21,6 +21,7 @@ library
                      , Ballast.Render
                      , Ballast.Init
                      , Ballast.Types
+                     , Ballast.AssetLoader
 
   build-depends:       base >= 4.7 && < 5
                      , sdl2 >= 2.1.0 && < 2.2.0

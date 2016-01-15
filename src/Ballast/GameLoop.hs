@@ -25,7 +25,7 @@ gameLoop renderer bc previousCargo previousTick previousLag = do
       -- update
       let (updatedCargo, remainingLag) = update previousCargo bc $ previousLag + elapsedTicks
       --print remainingLag
-      print updatedCargo
+      --print updatedCargo
       -- render
       render renderer bc updatedCargo currentTick
 
