@@ -1,12 +1,13 @@
 module Ballast.AssetLoader(loadAssets) where
 
+import           Ballast.Internal
 import           Ballast.Types
 import           Control.Monad
-import qualified Data.Map      as M
+import qualified Data.Map         as M
 import           SDL
 import           SDL.Image
 
-loadAssets :: Renderer -> BallastConfig -> IO BallastConfig
+loadAssets :: Renderer -> BallastConfig -> IO BallastState
 loadAssets r bc = do
   -- load textures
   loadedTextures <- foldM (\m (k, fp) -> do
@@ -17,4 +18,5 @@ loadAssets r bc = do
   print $ M.keys loadedTextures
 
   return $
-    bc { bcLoadedTextures = loadedTextures }
+    BallastState { bsLoadedTextures = loadedTextures
+                 , bsBallastConfig = bc}

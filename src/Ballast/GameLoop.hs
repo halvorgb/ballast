@@ -1,8 +1,9 @@
 module Ballast.GameLoop(gameLoop) where
 
+import           Ballast.Internal
 import           Ballast.Render
 import           Ballast.Types
-import qualified Data.Word      as W
+import qualified Data.Word        as W
 import           Linear
 import           Linear.Affine
 import           SDL
@@ -10,8 +11,8 @@ import           SDL.Time
 
 -- | Gameloop: http://gameprogrammingpatterns.com/game-loop.html
 --  ticks = milliseconds since initialization, elapedTicks is the delay (delta) inbetween each iteration.
-gameLoop :: (Show c, Cargo c) => Renderer -> BallastConfig -> c -> W.Word32 -> W.Word32 -> IO ()
-gameLoop renderer bc previousCargo previousTick previousLag = do
+gameLoop :: (Show c, Cargo c) => Renderer -> BallastState -> c -> W.Word32 -> W.Word32 -> IO ()
+gameLoop renderer bs previousCargo previousTick previousLag = do
   -- Poll ticks.
   currentTick <- ticks
   let elapsedTicks = currentTick - previousTick
@@ -23,22 +24,24 @@ gameLoop renderer bc previousCargo previousTick previousLag = do
 
     Just handledEventsCargo -> do
       -- update
-      let (updatedCargo, remainingLag) = update previousCargo bc $ previousLag + elapsedTicks
+      let (updatedCargo, remainingLag) = update previousCargo bs $ previousLag + elapsedTicks
       --print remainingLag
       --print updatedCargo
       -- render
-      render renderer bc updatedCargo currentTick
+      render renderer bs updatedCargo currentTick
 
       -- loop
-      gameLoop renderer bc updatedCargo currentTick remainingLag
+      gameLoop renderer bs updatedCargo currentTick remainingLag
 
 
 handleEvents :: Cargo c => c -> [Event] -> Maybe c
 handleEvents = eventFunction
 
-update :: Cargo c => c -> BallastConfig -> W.Word32 -> (c, W.Word32)
-update c bc l = updateWhileLagging c l
+update :: Cargo c => c -> BallastState -> W.Word32 -> (c, W.Word32)
+update c bs l = updateWhileLagging c l
   where
+    bc = bsBallastConfig bs
+
     updateWhileLagging :: Cargo c => c -> W.Word32 -> (c, W.Word32)
     updateWhileLagging cargo lag
       | lag >= millisecondsPerUpdate =

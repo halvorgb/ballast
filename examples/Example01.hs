@@ -13,12 +13,12 @@ import           System.Random
 
 textureAssets = [("test1", "assets/sprite_test.png")]
 
-config = BallastConfig { bcDimensions = (640, 480)
+config = BallastConfig { bcLogicalDimensions = V2 512 384
+                       , bcPixelDimensions = V2 1024 768
                        , bcTitle = "Hello World"
                        , bcTextureAssets = textureAssets
                        , bcClearColor = V4 140 130 137 255
                        , bcMsPerUpdate = 16
-                       , bcLoadedTextures = M.empty
                        }
 
 data Universe =
@@ -29,8 +29,8 @@ data Universe =
 
 instance Cargo Universe where
   renderables universe = [
-    Renderable { rPosition = V2 200 200
-               , rDimensions = V2 128 128
+    Renderable { rPosition = V2 256 192
+               , rDimensions = V2 64 64
                , rTextureId = "test1"
                , rRotation = 0
                , rMillisecondsPerFrame = 100

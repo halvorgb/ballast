@@ -1,22 +1,23 @@
 module Ballast.Render(render) where
 
+import           Ballast.Internal
 import           Ballast.Types
-import qualified Data.Word     as W
-import qualified Data.Map as M
+import qualified Data.Map         as M
+import qualified Data.Word        as W
 import           Linear
 import           Linear.Affine
 import           SDL
 
 
-render :: Cargo c => Renderer -> BallastConfig -> c -> W.Word32 -> IO ()
-render renderer bc cargo currentTick = do
+render :: Cargo c => Renderer -> BallastState -> c -> W.Word32 -> IO ()
+render renderer bs cargo currentTick = do
   rendererDrawColor renderer $= bcClearColor bc
   clear renderer
   mapM_ (renderRenderable textureMap renderer currentTick) $ renderables cargo
   present renderer
-
   where
-    textureMap = bcLoadedTextures bc
+    textureMap = bsLoadedTextures bs
+    bc = bsBallastConfig bs
 
 -- | Renders a renderable sprite or renderable.
 -- | Supports animations, several frames in one texture, they must be aligned in a rectangle.

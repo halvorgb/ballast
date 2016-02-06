@@ -31,10 +31,10 @@ data SpriteData =
              }
 
 data BallastConfig =
-  BallastConfig { bcDimensions     :: (Int, Int)
-                , bcTitle          :: T.Text
-                , bcTextureAssets  :: [(TextureId, FilePath)]
-                , bcClearColor     :: V4 W.Word8
-                , bcMsPerUpdate    :: W.Word32
-                , bcLoadedTextures :: M.Map TextureId Texture
+  BallastConfig { bcLogicalDimensions :: V2 Int
+                , bcPixelDimensions   :: V2 Int
+                , bcTitle             :: T.Text
+                , bcTextureAssets     :: [(TextureId, FilePath)]
+                , bcClearColor        :: V4 W.Word8
+                , bcMsPerUpdate       :: W.Word32
                 }
